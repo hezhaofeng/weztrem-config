@@ -38,16 +38,8 @@ function global:Start-OptionalCommand {
     & $resolvedCommand.Source @CommandArgs
 }
 
-function global:Invoke-WezTermCodex {
-    Invoke-RequiredExternalCommand -CommandName "codex" -DisplayName "Codex CLI" -CommandArgs (@("--no-alt-screen") + $args)
-}
-
-function global:codex {
-    Invoke-WezTermCodex @args
-}
-
 function global:Start-CodexYolo {
-    codex --yolo
+    Invoke-RequiredExternalCommand -CommandName "codex" -DisplayName "Codex CLI" -CommandArgs @("--yolo")
 }
 
 function global:Start-ClaudeDangerously {

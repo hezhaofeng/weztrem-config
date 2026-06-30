@@ -121,11 +121,7 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 
 | 命令 | 作用 |
 | --- | --- |
-| `utf8` | 切换控制台到 UTF-8 |
-| `gbk` | 临时切换到 GBK，兼容老程序中文输出 |
-| `javautf8` | 用 UTF-8 参数启动 Java |
 | `gitbash` | 从当前 PowerShell 启动 Git Bash |
-| `codex` | 调用 Codex CLI，并默认追加 `--no-alt-screen` |
 | `cxy` | 以 YOLO 模式启动 Codex |
 | `ccd` | 启动 Claude 并跳过权限确认 |
 | `cxu` | 更新 Codex CLI |
