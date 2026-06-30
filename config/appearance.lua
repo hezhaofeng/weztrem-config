@@ -1,33 +1,22 @@
-local wezterm = require("wezterm")
-
 return {
   term = "xterm-256color",
-  animation_fps = 30,
+  animation_fps = 60,
   max_fps = 60,
   front_end = "WebGpu",
+  webgpu_power_preference = "HighPerformance",
 
   -- color scheme
   color_scheme = "Gruvbox dark, medium (base16)",
 
   -- background
-  window_background_opacity = 0.94,
-  win32_system_backdrop = "Acrylic",
-  background = {
-    {
-      source = { File = wezterm.config_dir .. "/backdrops/space.png" },
-    },
-    {
-      source = { Color = "#161A22" },
-      height = "100%",
-      width = "100%",
-      opacity = 0.9,
-    },
-  },
+  window_background_opacity = 1.0,
+  win32_system_backdrop = "Disable",
 
   -- scrollbar
   enable_scroll_bar = true,
   min_scroll_bar_height = "3cell",
   colors = {
+    background = "#161A22",
     scrollbar_thumb = "#3D4658",
     tab_bar = {
       background = "#1B2029",

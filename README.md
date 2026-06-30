@@ -5,9 +5,9 @@
 ## 当前特性
 
 - 默认 Shell：Windows 下使用 PowerShell 7，并加载 `scripts/pwsh-wezterm.ps1`。
-- 渲染后端：`WebGpu`，`max_fps = 60`，`animation_fps = 30`。
+- 渲染后端：`WebGpu`，优先使用高性能 GPU，`max_fps = 60`，`animation_fps = 60`。
 - 主题配色：`Gruvbox dark, medium (base16)`。
-- 背景：`backdrops/space.png` 图片层 + `#161A22` 深色遮罩 + Windows Acrylic。
+- 背景：使用纯色 `#161A22`，关闭透明和 Windows 背景特效以降低全屏/还原时的合成压力。
 - 标签栏：自定义胶囊标签、进程图标、管理员标识、未读输出提示。
 - 状态栏：右侧显示日期时间和电池状态。
 - 快捷键：禁用默认键盘/鼠标绑定，仅保留本仓库自定义绑定。
