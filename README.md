@@ -11,7 +11,7 @@
 - 标签栏：自定义胶囊标签、进程图标、管理员标识、未读输出提示。
 - 状态栏：右侧显示日期时间和电池状态。
 - 快捷键：禁用默认键盘/鼠标绑定，仅保留本仓库自定义绑定。
-- 启动器：集成 PowerShell、cmd、Nushell、Yazi、Codex、Claude、pnpm 更新和 Git Bash。
+- 启动器：集成 PowerShell、cmd、Nushell、Yazi、Codex、Git worktree、Claude、pnpm 更新和 Git Bash。
 
 ## 目录结构
 
@@ -32,6 +32,7 @@
 ├── scripts/
 │   ├── check-env.ps1        # 迁移/环境检测脚本
 │   ├── cli-tools.ps1        # Codex、Claude、pnpm 辅助别名
+│   ├── git-worktree-tools.ps1 # Git worktree 工作流别名
 │   └── pwsh-wezterm.ps1     # WezTerm 专用 PowerShell 启动脚本
 ├── backdrops/               # 背景图片
 ├── img/                     # 文档图片
@@ -109,6 +110,7 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | 打开 Nushell | 可选 Shell，未安装时显示提示 |
 | 打开 Yazi 文件管理器 | 启动 `yazi` |
 | cxy：以 YOLO 模式启动 Codex | 调用 `codex --yolo` |
+| gwn：创建 Git worktree 并进入目录 | 按任务分支创建 worktree，然后进入新目录 |
 | ccd：启动 Claude 并跳过权限确认 | 调用 `claude --dangerously-skip-permissions` |
 | cxu：更新 Codex 版本 | 调用 `pnpm add -g @openai/codex@latest` |
 | ccu：更新 Claude 版本 | 调用 `claude update` |
@@ -126,6 +128,22 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | `ccd` | 启动 Claude 并跳过权限确认 |
 | `cxu` | 更新 Codex CLI |
 | `ccu` | 更新 Claude CLI |
+| `gwl` | 查看当前主仓库关联的 worktree |
+| `gwn` | 创建 Git worktree 并进入新目录 |
+| `gwr` | 删除 Git worktree，默认先确认且不强制删除未提交修改 |
+| `gwp` | 执行 `git worktree prune` 并重新列出 worktree |
+
+`gwn/gwl/gwr/gwp` 默认根据当前路径解析主仓库，在主仓库或任意关联 worktree 中执行都会定位到主仓库；如果确实要从别处操作，可以显式传入 `-MainRepo`。新分支默认基于主仓库当前 HEAD，可用 `-From` 指定基点。例如：
+
+```powershell
+cd D:\work\spider-data-go-copy
+gwn -Branch feature/demo
+gwn -Branch feature/demo2 -From origin/main
+gwn -Branch bugfix/login -Remote
+gwl
+gwr -WorktreePath D:\work\spider-data-go-copy-feature-demo
+gwp
+```
 
 ## 常用命令
 
@@ -158,6 +176,8 @@ selene .
 ## 快捷键
 
 完整快捷键见 [快捷键.md](./快捷键.md)。
+
+Git worktree 快捷指令的完整用法和工作原理见 [git-worktree-快捷指令.md](./git-worktree-快捷指令.md)。
 
 最常用的 Windows/Linux 快捷键：
 

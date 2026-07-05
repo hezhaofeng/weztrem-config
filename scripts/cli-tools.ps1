@@ -54,6 +54,11 @@ function global:Update-ClaudeCli {
     Invoke-RequiredExternalCommand -CommandName "claude" -DisplayName "Claude CLI" -CommandArgs @("update")
 }
 
+$gitWorktreeToolsScript = Join-Path $PSScriptRoot "git-worktree-tools.ps1"
+if (Test-Path $gitWorktreeToolsScript) {
+    . $gitWorktreeToolsScript
+}
+
 Set-Alias -Name cxy -Value Start-CodexYolo -Scope Global -Force
 Set-Alias -Name ccd -Value Start-ClaudeDangerously -Scope Global -Force
 Set-Alias -Name cxu -Value Update-CodexCli -Scope Global -Force

@@ -51,6 +51,12 @@ if ((Test-Path Variable:\Global:__VSCodeState) -and $Global:__VSCodeState) {
 
 function global:prompt {
     $location = $executionContext.SessionState.Path.CurrentLocation
+    if ($location.Provider.Name -eq "FileSystem") {
+        # OSC 7：向 WezTerm 报告当前目录，新标签页/分屏/启动器项由此继承 cwd。
+        $esc = [char]27
+        $providerPath = $location.ProviderPath -replace "\\", "/"
+        Write-Host -NoNewline "$esc]7;file://$env:COMPUTERNAME/$providerPath$esc\"
+    }
     "PS $location$('>' * ($nestedPromptLevel + 1)) "
 }
 

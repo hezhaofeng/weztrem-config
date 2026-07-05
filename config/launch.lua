@@ -49,6 +49,7 @@ if platform.is_win then
       args = powershell_command_args("Start-OptionalCommand -CommandName 'yazi' -DisplayName 'Yazi'"),
     },
     { label = "󰚰 cxy：以 YOLO 模式启动 Codex", args = powershell_command_args("cxy") },
+    { label = " gwn：创建 Git worktree 并进入目录", args = powershell_command_args("gwn") },
     { label = "󰚰 ccd：启动 Claude 并跳过权限确认", args = powershell_command_args("ccd") },
     { label = "󰚰 cxu：更新 Codex 版本", args = powershell_command_args("cxu") },
     { label = "󰚰 ccu：更新 Claude 版本", args = powershell_command_args("ccu") },

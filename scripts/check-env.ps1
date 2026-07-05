@@ -305,11 +305,13 @@ Invoke-WezTermConfigCheck
 Test-PathItem -Path (Join-Path $RepoRoot "wezterm.lua") -Category "WezTerm" -Name "入口配置 wezterm.lua" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\pwsh-wezterm.ps1") -Category "WezTerm" -Name "PowerShell 启动脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\cli-tools.ps1") -Category "WezTerm" -Name "CLI 别名脚本" -Level Required
+Test-PathItem -Path (Join-Path $RepoRoot "scripts\git-worktree-tools.ps1") -Category "WezTerm" -Name "Git worktree 辅助脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "backdrops\space.png") -Category "WezTerm" -Name "背景图片 space.png" -Level Optional -Note "当前 appearance.lua 已启用该背景图片。"
 
 Test-CommandTool -Name "pwsh" -Category "Shell/启动项" -Level Required -DisplayName "PowerShell 7" -InstallHint "winget install Microsoft.PowerShell" -VersionArgs @("-NoLogo", "-NoProfile", "-Command", '$PSVersionTable.PSVersion.ToString()')
 Test-CommandTool -Name "powershell" -Category "Shell/启动项" -Level Required -DisplayName "Windows PowerShell" -VersionArgs @("-NoLogo", "-NoProfile", "-Command", '$PSVersionTable.PSVersion.ToString()')
 Test-CommandTool -Name "cmd" -Category "Shell/启动项" -Level Required -DisplayName "命令提示符" -VersionArgs @("/c", "ver")
+Test-CommandTool -Name "git" -Category "Shell/启动项" -Level Required -DisplayName "Git CLI" -InstallHint "winget install Git.Git"
 Test-CommandTool -Name "nu" -Category "Shell/启动项" -Level Optional -DisplayName "Nushell" -InstallHint "winget install Nushell.Nushell"
 Test-PathItem -Path "D:\software\Git\bin\bash.exe" -Category "Shell/启动项" -Name "Git Bash 固定路径" -Level Optional -Note "launch.lua 当前写死了这个路径；迁移到新机器时要么保持路径一致，要么改 launch.lua。"
 
