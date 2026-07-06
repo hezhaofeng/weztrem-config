@@ -1,6 +1,7 @@
 return {
   term = "xterm-256color",
-  animation_fps = 60,
+  -- 光标缓动为 Constant（无渐变），1 帧即可表现亮/灭，降低空闲时的重绘功耗
+  animation_fps = 1,
   max_fps = 60,
   front_end = "WebGpu",
   webgpu_power_preference = "HighPerformance",

@@ -306,7 +306,7 @@ Test-PathItem -Path (Join-Path $RepoRoot "wezterm.lua") -Category "WezTerm" -Nam
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\pwsh-wezterm.ps1") -Category "WezTerm" -Name "PowerShell 启动脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\cli-tools.ps1") -Category "WezTerm" -Name "CLI 别名脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\git-worktree-tools.ps1") -Category "WezTerm" -Name "Git worktree 辅助脚本" -Level Required
-Test-PathItem -Path (Join-Path $RepoRoot "backdrops\space.png") -Category "WezTerm" -Name "背景图片 space.png" -Level Optional -Note "当前 appearance.lua 已启用该背景图片。"
+Test-PathItem -Path (Join-Path $RepoRoot "backdrops\space.png") -Category "WezTerm" -Name "背景图片 space.png" -Level Optional -Note "配置当前使用纯色背景，该图片未启用，保留备用。"
 
 Test-CommandTool -Name "pwsh" -Category "Shell/启动项" -Level Required -DisplayName "PowerShell 7" -InstallHint "winget install Microsoft.PowerShell" -VersionArgs @("-NoLogo", "-NoProfile", "-Command", '$PSVersionTable.PSVersion.ToString()')
 Test-CommandTool -Name "powershell" -Category "Shell/启动项" -Level Required -DisplayName "Windows PowerShell" -VersionArgs @("-NoLogo", "-NoProfile", "-Command", '$PSVersionTable.PSVersion.ToString()')
@@ -332,6 +332,9 @@ Test-CommandTool -Name "pdftoppm" -Category "Yazi 配套工具" -Level Optional 
 Test-CommandTool -Name "codex" -Category "AI CLI/启动项" -Level Optional -DisplayName "Codex CLI" -InstallHint "pnpm add -g @openai/codex@latest"
 Test-CommandTool -Name "claude" -Category "AI CLI/启动项" -Level Optional -DisplayName "Claude CLI"
 Test-CommandTool -Name "pnpm" -Category "AI CLI/启动项" -Level Optional -DisplayName "pnpm" -InstallHint "corepack enable 或 winget install pnpm.pnpm"
+
+Test-CommandTool -Name "stylua" -Category "开发工具" -Level Optional -DisplayName "StyLua 格式化" -Note "AGENTS.md 约定改动 Lua 后执行 stylua ." -InstallHint "winget install JohnnyMorganz.StyLua"
+Test-CommandTool -Name "selene" -Category "开发工具" -Level Optional -DisplayName "Selene 静态检查" -Note "AGENTS.md 约定改动 Lua 后执行 selene ." -InstallHint "cargo install selene，或从 GitHub Releases 下载"
 
 Test-FontName -Name "JetBrainsMono" -Level Required
 Test-FontName -Name "MesloLGM" -Level Required

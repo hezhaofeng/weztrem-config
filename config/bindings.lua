@@ -22,6 +22,12 @@ local keys = {
   { key = "F11", mods = "NONE", action = act.ToggleFullScreen },
   { key = "F12", mods = "NONE", action = act.ShowDebugOverlay },
   { key = "f", mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = "" }) },
+  { key = "q", mods = mod.SUPER, action = act.QuickSelect },
+  {
+    key = "e",
+    mods = mod.SUPER,
+    action = act.CharSelect({ copy_on_select = true, copy_to = "ClipboardAndPrimarySelection" }),
+  },
 
   -- copy/paste --
   { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
@@ -85,6 +91,7 @@ local keys = {
   { key = "j", mods = mod.SUPER_REV, action = act.ActivatePaneDirection("Down") },
   { key = "h", mods = mod.SUPER_REV, action = act.ActivatePaneDirection("Left") },
   { key = "l", mods = mod.SUPER_REV, action = act.ActivatePaneDirection("Right") },
+  { key = "p", mods = mod.SUPER_REV, action = act.PaneSelect({ alphabet = "1234567890" }) },
 
   -- panes: resize
   { key = "UpArrow", mods = mod.SUPER_REV, action = act.AdjustPaneSize({ "Up", 1 }) },

@@ -24,8 +24,20 @@ function Use-Utf8ConsoleEncoding {
 function global:Start-GitBash {
     $gitBash = "D:\software\Git\bin\bash.exe"
 
-    if (-not (Test-Path $gitBash)) {
-        Write-Error "未找到 Git Bash：$gitBash"
+    if (-not (Test-Path -LiteralPath $gitBash)) {
+        # 固定路径不存在时（例如迁移到新机器），从 PATH 里 git.exe 的位置推导 bash.exe。
+        $git = Get-Command "git" -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($git) {
+            $gitRoot = Split-Path -Parent (Split-Path -Parent $git.Source)
+            $candidate = Join-Path $gitRoot "bin\bash.exe"
+            if (Test-Path -LiteralPath $candidate) {
+                $gitBash = $candidate
+            }
+        }
+    }
+
+    if (-not (Test-Path -LiteralPath $gitBash)) {
+        Write-Error "未找到 Git Bash：$gitBash，也无法从 git.exe 位置推导。"
         return
     }
 

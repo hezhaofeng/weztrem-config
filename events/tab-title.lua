@@ -37,11 +37,16 @@ M.process_icons = {
   bash = "",
   cmd = "",
   fish = "󰈺",
+  git = "󰊢",
+  node = "󰎙",
   nvim = "",
   nu = "",
   powershell = "",
   pwsh = "",
+  python = "󰌠",
+  ssh = "󰣀",
   vim = "",
+  yazi = "󰉋",
   zsh = "",
 }
 
