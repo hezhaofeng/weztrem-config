@@ -13,6 +13,18 @@ elseif platform.is_win or platform.is_linux then
   mod.SUPER_REV = "ALT|CTRL"
 end
 
+local function move_current_pane_to_new_window(pane)
+  -- WezTerm 目前不支持直接拖拽标签页到新窗口，这里用 CLI 移动当前窗格来模拟拆分标签页。
+  wezterm.background_child_process({
+    "wezterm",
+    "cli",
+    "move-pane-to-new-tab",
+    "--pane-id",
+    tostring(pane:pane_id()),
+    "--new-window",
+  })
+end
+
 local keys = {
   -- misc/useful --
   { key = "F1", mods = "NONE", action = "ActivateCopyMode" },
@@ -50,6 +62,13 @@ local keys = {
   -- tabs: spawn+close
   { key = "t", mods = mod.SUPER, action = act.SpawnTab("DefaultDomain") },
   { key = "n", mods = mod.SUPER_REV, action = act.SpawnCommandInNewTab({ domain = "CurrentPaneDomain" }) },
+  {
+    key = "d",
+    mods = mod.SUPER_REV,
+    action = wezterm.action_callback(function(_, pane)
+      move_current_pane_to_new_window(pane)
+    end),
+  },
   { key = "w", mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
   -- tabs: navigation
