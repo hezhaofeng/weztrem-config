@@ -128,6 +128,7 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | `ccd` | 启动 Claude 并跳过权限确认 |
 | `cxu` | 更新 Codex CLI |
 | `ccu` | 更新 Claude CLI |
+| `pnu` | 更新 pnpm |
 | `gwl` | 查看当前主仓库关联的 worktree |
 | `gwn` | 创建 Git worktree 并进入新目录 |
 | `gwr` | 删除 Git worktree，默认先确认且不强制删除未提交修改 |

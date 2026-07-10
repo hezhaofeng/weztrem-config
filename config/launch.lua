@@ -20,9 +20,6 @@ local function powershell_command_args(command)
   return { powershell7, "-NoLogo", "-NoProfile", "-NoExit", "-Command", bootstrap_command }
 end
 
-local pnpm_self_update_command =
-  "Invoke-RequiredExternalCommand -CommandName 'pnpm' -DisplayName 'pnpm' -CommandArgs @('self-update')"
-
 local options = {
   default_prog = {},
   launch_menu = {},
@@ -55,7 +52,7 @@ if platform.is_win then
     { label = "󰚰 ccu：更新 Claude 版本", args = powershell_command_args("ccu") },
     {
       label = "󰏗 pnu：更新 pnpm 版本",
-      args = powershell_command_args(pnpm_self_update_command),
+      args = powershell_command_args("pnu"),
     },
     {
       label = " 打开 Git Bash",
