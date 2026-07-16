@@ -5,14 +5,25 @@ function global:Invoke-RequiredExternalCommand {
 
         [string] $DisplayName = $CommandName,
 
-        [string[]] $CommandArgs = @()
+        [string[]] $CommandArgs = @(),
+
+        [switch] $PreferExternalScript
     )
 
     # Windows 上 pnpm、Codex 等工具通常同时提供 .cmd 和 .ps1 启动器。
-    # 优先使用应用程序启动器，避免 PowerShell 执行策略阻止同名 .ps1 脚本。
-    $resolvedCommand = Get-Command $CommandName -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
-    if (-not $resolvedCommand) {
-        $resolvedCommand = Get-Command $CommandName -CommandType ExternalScript -ErrorAction SilentlyContinue | Select-Object -First 1
+    # 默认优先使用应用程序启动器，避免 PowerShell 执行策略阻止同名 .ps1 脚本。
+    $commandTypes = if ($PreferExternalScript) {
+        @("ExternalScript", "Application")
+    } else {
+        @("Application", "ExternalScript")
+    }
+    $resolvedCommand = $null
+    foreach ($commandType in $commandTypes) {
+        $resolvedCommand = Get-Command $CommandName -CommandType $commandType -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+        if ($resolvedCommand) {
+            break
+        }
     }
 
     if (-not $resolvedCommand) {
@@ -85,7 +96,8 @@ function global:Update-ClaudeCli {
 }
 
 function global:Update-PnpmCli {
-    Invoke-RequiredExternalCommand -CommandName "pnpm" -DisplayName "pnpm" -CommandArgs @("self-update")
+    # self-update 会重写 pnpm.cmd；改用 PowerShell 启动器，避免 cmd.exe 继续读取被覆盖后的批处理文件。
+    Invoke-RequiredExternalCommand -CommandName "pnpm" -DisplayName "pnpm" -CommandArgs @("self-update") -PreferExternalScript
 }
 
 $gitWorktreeToolsScript = Join-Path $PSScriptRoot "git-worktree-tools.ps1"
