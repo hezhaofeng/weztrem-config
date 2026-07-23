@@ -8,11 +8,11 @@ M.charging_icons = { "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "�
 
 M.colors = {
   date_fg = "#7DCFFF",
-  date_bg = "#161A22",
+  date_bg = "#293241",
   battery_fg = "#9ECE6A",
-  battery_bg = "#161A22",
+  battery_bg = "#293241",
   separator_fg = "#3D4658",
-  separator_bg = "#161A22",
+  separator_bg = "#293241",
 }
 
 M.cells = {} -- wezterm FormatItems (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)

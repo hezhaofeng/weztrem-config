@@ -11,7 +11,7 @@ local M = {}
 M.cells = {}
 
 M.colors = {
-  edge = "#1B2029",
+  edge = "#293241",
   default = {
     bg = "#303846",
     fg = "#C0CAF5",

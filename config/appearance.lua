@@ -20,7 +20,7 @@ return {
     background = "#161A22",
     scrollbar_thumb = "#3D4658",
     tab_bar = {
-      background = "#1B2029",
+      background = "#293241",
     },
   },
 
@@ -54,8 +54,8 @@ return {
   },
   window_close_confirmation = "AlwaysPrompt",
   window_frame = {
-    active_titlebar_bg = "#1B2029",
-    inactive_titlebar_bg = "#1B2029",
+    active_titlebar_bg = "#293241",
+    inactive_titlebar_bg = "#293241",
   },
   inactive_pane_hsb = { saturation = 1.0, brightness = 1.0 },
 }
