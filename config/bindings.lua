@@ -47,7 +47,8 @@ local keys = {
   { key = "z", mods = "CTRL|SHIFT", action = act.SendKey({ key = "z", mods = "CTRL" }) },
   {
     key = "a",
-    mods = "CTRL|SHIFT",
+    -- 保留 Ctrl+A 给终端程序使用，避免干扰 Codex、Claude 等 TUI 的输入处理。
+    mods = "CTRL|ALT",
     action = act.Multiple({
       act.ActivateCopyMode,
       act.CopyMode("MoveToScrollbackTop"),
@@ -226,22 +227,12 @@ local mouse_bindings = {
     mods = "NONE",
     action = act.SelectTextAtMouseCursor("Word"),
   },
-  -- Turn on the mouse wheel to scroll the screen
-  {
-    event = { Down = { streak = 1, button = { WheelUp = 1 } } },
-    mods = "NONE",
-    action = act.ScrollByCurrentEventWheelDelta,
-  },
-  {
-    event = { Down = { streak = 1, button = { WheelDown = 1 } } },
-    mods = "NONE",
-    action = act.ScrollByCurrentEventWheelDelta,
-  },
 }
 
 return {
   disable_default_key_bindings = true,
-  disable_default_mouse_bindings = true,
+  -- 恢复备用屏幕的默认滚轮转发，供 Codex、Claude 等 TUI 自行处理。
+  disable_default_mouse_bindings = false,
   leader = { key = "Space", mods = "CTRL|SHIFT" },
   keys = keys,
   key_tables = key_tables,
