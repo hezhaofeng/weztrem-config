@@ -5,7 +5,7 @@
 本仓库是一个模块化的 WezTerm 配置。`wezterm.lua` 是入口文件，应保持简洁；它从 `events/` 加载事件初始化逻辑，并从 `config/` 组合配置选项。
 
 - `config/`：配置模块，例如 `appearance.lua`、`bindings.lua`、`fonts.lua`、`general.lua` 和 `launch.lua`。
-- `events/`：WezTerm 事件处理器，用于状态栏、标签标题和新建标签按钮行为。
+- `events/`：WezTerm 事件处理器，用于启动时最大化窗口、状态栏、标签标题和新建标签按钮行为。
 - `utils/`：共享辅助函数，目前包含平台判断和数学工具。
 - `scripts/`：PowerShell 启动与辅助脚本，加载链为 `pwsh-wezterm.ps1 -> cli-tools.ps1 -> git-worktree-tools.ps1`；`check-env.ps1` 是独立的环境检测脚本。
 - `colors/`：预留的自定义配色目录（当前为空，配色使用内置的 Gruvbox 主题）。

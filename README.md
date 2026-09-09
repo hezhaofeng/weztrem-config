@@ -11,6 +11,7 @@
 - 标签栏：自定义胶囊标签、进程图标、管理员标识、未读输出提示。
 - 状态栏：右侧显示日期时间和电池状态。
 - 快捷键：禁用默认键盘绑定；保留 WezTerm 默认鼠标绑定，以支持 Codex、Claude 等全屏终端程序。
+- 窗口：启动时自动最大化，规避跨 DPI 显示器切换时窗口自行缩小的上游问题（wezterm/wezterm#4915、#5022）；仅对启动时的首个窗口生效。
 - 启动器：集成 PowerShell、cmd、Nushell、Yazi、Codex、Git worktree、Claude、pnpm 更新和 Git Bash。
 
 ## 目录结构
@@ -26,6 +27,7 @@
 │   ├── init.lua             # 配置合并辅助
 │   └── launch.lua           # 默认 Shell 和启动菜单
 ├── events/
+│   ├── gui-startup.lua      # 启动时最大化窗口
 │   ├── new-tab-button.lua   # 新建标签按钮行为
 │   ├── right-status.lua     # 右侧状态栏
 │   └── tab-title.lua        # 自定义标签标题

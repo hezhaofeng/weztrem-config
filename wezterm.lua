@@ -1,5 +1,6 @@
 local Config = require("config")
 
+require("events.gui-startup").setup()
 require("events.right-status").setup()
 require("events.tab-title").setup()
 require("events.new-tab-button").setup()
