@@ -50,6 +50,8 @@ if platform.is_win then
     { label = "󰚰 ccd：启动 Claude 并跳过权限确认", args = powershell_command_args("ccd") },
     { label = "󰚰 cxu：更新 Codex 版本", args = powershell_command_args("cxu") },
     { label = "󰚰 ccu：更新 Claude 版本", args = powershell_command_args("ccu") },
+    { label = "󰚰 agd：启动 Antigravity 并跳过权限确认", args = powershell_command_args("agd") },
+    { label = "󰚰 agu：更新 Antigravity 版本", args = powershell_command_args("agu") },
     {
       label = "󰏗 pnu：更新 pnpm 版本",
       args = powershell_command_args("pnu"),

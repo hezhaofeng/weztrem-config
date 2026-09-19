@@ -95,6 +95,14 @@ function global:Update-ClaudeCli {
     Invoke-RequiredExternalCommand -CommandName "claude" -DisplayName "Claude CLI" -CommandArgs @("update")
 }
 
+function global:Start-AntigravityDangerously {
+    Invoke-RequiredExternalCommand -CommandName "agy" -DisplayName "Antigravity CLI" -CommandArgs @("--dangerously-skip-permissions")
+}
+
+function global:Update-AntigravityCli {
+    Invoke-RequiredExternalCommand -CommandName "agy" -DisplayName "Antigravity CLI" -CommandArgs @("update")
+}
+
 function global:Update-PnpmCli {
     # self-update 会重写 pnpm.cmd；改用 PowerShell 启动器，避免 cmd.exe 继续读取被覆盖后的批处理文件。
     Invoke-RequiredExternalCommand -CommandName "pnpm" -DisplayName "pnpm" -CommandArgs @("self-update") -PreferExternalScript
@@ -109,4 +117,6 @@ Set-Alias -Name cxy -Value Start-CodexYolo -Scope Global -Force
 Set-Alias -Name ccd -Value Start-ClaudeDangerously -Scope Global -Force
 Set-Alias -Name cxu -Value Update-CodexCli -Scope Global -Force
 Set-Alias -Name ccu -Value Update-ClaudeCli -Scope Global -Force
+Set-Alias -Name agd -Value Start-AntigravityDangerously -Scope Global -Force
+Set-Alias -Name agu -Value Update-AntigravityCli -Scope Global -Force
 Set-Alias -Name pnu -Value Update-PnpmCli -Scope Global -Force

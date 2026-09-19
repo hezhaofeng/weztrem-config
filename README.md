@@ -116,6 +116,8 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | ccd：启动 Claude 并跳过权限确认 | 调用 `claude --dangerously-skip-permissions` |
 | cxu：更新 Codex 版本 | 调用 `pnpm add -g @openai/codex@latest` |
 | ccu：更新 Claude 版本 | 调用 `claude update` |
+| agd：启动 Antigravity 并跳过权限确认 | 调用 `agy --dangerously-skip-permissions` |
+| agu：更新 Antigravity 版本 | 调用 `agy update` |
 | pnu：更新 pnpm 版本 | 调用 `pnpm self-update` |
 | 打开 Git Bash | 使用 `D:\software\Git\bin\bash.exe` |
 
@@ -130,6 +132,8 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | `ccd` | 启动 Claude 并跳过权限确认 |
 | `cxu` | 更新 Codex CLI |
 | `ccu` | 更新 Claude CLI |
+| `agd` | 启动 Antigravity CLI 并跳过权限确认 |
+| `agu` | 更新 Antigravity CLI |
 | `pnu` | 更新 pnpm |
 | `gwl` | 查看当前主仓库关联的 worktree |
 | `gwn` | 创建 Git worktree 并进入新目录 |
