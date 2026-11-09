@@ -12,7 +12,7 @@
 - 状态栏：右侧显示日期时间和电池状态。
 - 快捷键：禁用默认键盘绑定；保留 WezTerm 默认鼠标绑定，以支持 Codex、Claude 等全屏终端程序。
 - 窗口：启动时自动最大化，规避跨 DPI 显示器切换时窗口自行缩小的上游问题（wezterm/wezterm#4915、#5022）；仅对启动时的首个窗口生效。
-- 启动器：集成 PowerShell、cmd、Nushell、Codex、Git worktree、Claude、pnpm 更新和 Git Bash。
+- 启动器：集成 PowerShell、cmd、Nushell、Codex、Git worktree、Claude、Antigravity、pnpm 更新和 Git Bash。
 
 ## 目录结构
 
@@ -34,6 +34,7 @@
 ├── scripts/
 │   ├── check-env.ps1        # 迁移/环境检测脚本
 │   ├── cli-tools.ps1        # Codex、Claude、pnpm 辅助别名
+│   ├── environment-tools.ps1 # 两种 PowerShell 共用的环境刷新逻辑
 │   ├── git-worktree-tools.ps1 # Git worktree 工作流别名
 │   └── pwsh-wezterm.ps1     # WezTerm 专用 PowerShell 启动脚本
 ├── backdrops/               # 背景图片（当前未启用，保留备用）
@@ -58,10 +59,11 @@
 - Nushell：`nu`
 - Codex CLI：`codex`
 - Claude CLI：`claude`
+- Antigravity CLI：`agy`，启动和更新使用本地代理 `127.0.0.1:7890`
 - pnpm：`pnpm`
-- Git Bash：当前配置固定路径为 `D:\software\Git\bin\bash.exe`
+- Git Bash：优先使用 `D:\software\Git\bin\bash.exe`，不存在时从 PATH 中的 Git 安装位置查找
 
-如果迁移到新机器，Git Bash 路径要么保持一致，要么修改 `config/launch.lua` 里的 `git_bash`。`scripts/pwsh-wezterm.ps1` 里的 `gitbash` 别名在固定路径不存在时，会自动从 PATH 中 `git.exe` 的位置推导。
+启动菜单和 `gitbash` 别名共用 `scripts/cli-tools.ps1` 中的 `Start-GitBash`，环境检测使用同一套路径解析逻辑。
 
 ## 安装与迁移
 
@@ -106,10 +108,10 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | ccd：启动 Claude 并跳过权限确认 | 调用 `claude --dangerously-skip-permissions` |
 | cxu：更新 Codex 版本 | 调用 `pnpm add -g @openai/codex@latest` |
 | ccu：更新 Claude 版本 | 调用 `claude update` |
-| agd：启动 Antigravity 并跳过权限确认 | 调用 `agy --dangerously-skip-permissions` |
-| agu：更新 Antigravity 版本 | 调用 `agy update` |
+| agd：启动 Antigravity 并跳过权限确认 | 将 `HTTP_PROXY`/`HTTPS_PROXY` 设为 `http://127.0.0.1:7890` 后调用 `agy --dangerously-skip-permissions` |
+| agu：更新 Antigravity 版本 | 临时设置本地代理 `127.0.0.1:7890` 后调用 `agy update` |
 | pnu：更新 pnpm 版本 | 调用 `pnpm self-update` |
-| 打开 Git Bash | 使用 `D:\software\Git\bin\bash.exe` |
+| 打开 Git Bash | 优先使用固定安装路径，不存在时自动从 PATH 查找 |
 
 ## PowerShell 辅助命令
 
@@ -118,17 +120,29 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | 命令 | 作用 |
 | --- | --- |
 | `gitbash` | 从当前 PowerShell 启动 Git Bash |
+| `refreshenv` | 刷新系统和用户环境变量，保留进程临时 PATH |
 | `cxy` | 以 YOLO 模式启动 Codex |
 | `ccd` | 启动 Claude 并跳过权限确认 |
 | `cxu` | 更新 Codex CLI |
 | `ccu` | 更新 Claude CLI |
-| `agd` | 启动 Antigravity CLI 并跳过权限确认 |
-| `agu` | 更新 Antigravity CLI |
+| `agd` | 经本地代理 `127.0.0.1:7890` 启动 Antigravity CLI 并跳过权限确认，代理仅在本次调用期间生效 |
+| `agu` | 经本地代理 `127.0.0.1:7890` 更新 Antigravity CLI，代理仅在本次调用期间生效 |
 | `pnu` | 更新 pnpm |
 | `gwl` | 查看当前主仓库关联的 worktree |
 | `gwn` | 创建 Git worktree 并进入新目录 |
 | `gwr` | 删除 Git worktree，默认先确认且不强制删除未提交修改 |
 | `gwp` | 执行 `git worktree prune` 并重新列出 worktree |
+
+本机 PowerShell 7 和 Windows PowerShell 5.1 的用户 Profile 均加载 `scripts/environment-tools.ps1` 并调用 `Update-Environment`。
+迁移时，可在两种 Shell 各自的 `$PROFILE` 中加入以下内容：
+
+```powershell
+. "$env:USERPROFILE\.config\wezterm\scripts\environment-tools.ps1"
+Update-Environment
+```
+
+刷新会移除本会话曾同步、后来从系统设置中删除且未被临时覆盖的变量和注册 PATH 项。
+首次刷新无法区分父进程遗留的旧值与临时变量，因此保留来源未知的进程变量和路径；需要彻底刷新继承环境时，应重新启动 WezTerm。
 
 `gwn/gwl/gwr/gwp` 默认根据当前路径解析主仓库，在主仓库或任意关联 worktree 中执行都会定位到主仓库；如果确实要从别处操作，可以显式传入 `-MainRepo`。新分支默认基于主仓库当前 HEAD，可用 `-From` 指定基点。例如：
 
@@ -147,7 +161,7 @@ gwp
 使用当前配置启动 WezTerm：
 
 ```powershell
-wezterm start --config-file .\wezterm.lua
+wezterm --config-file .\wezterm.lua start
 ```
 
 检查配置能否加载：

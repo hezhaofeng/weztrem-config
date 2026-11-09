@@ -7,7 +7,7 @@
 - `config/`：配置模块，例如 `appearance.lua`、`bindings.lua`、`fonts.lua`、`general.lua` 和 `launch.lua`。
 - `events/`：WezTerm 事件处理器，用于启动时最大化窗口、状态栏、标签标题和新建标签按钮行为。
 - `utils/`：共享辅助函数，目前包含平台判断和数学工具。
-- `scripts/`：PowerShell 启动与辅助脚本，加载链为 `pwsh-wezterm.ps1 -> cli-tools.ps1 -> git-worktree-tools.ps1`；`check-env.ps1` 是独立的环境检测脚本。
+- `scripts/`：PowerShell 启动与辅助脚本，加载链为 `pwsh-wezterm.ps1 -> cli-tools.ps1 -> git-worktree-tools.ps1`；用户 Profile 共用 `environment-tools.ps1` 刷新环境；`check-env.ps1` 是独立的环境检测脚本。
 - `colors/`：预留的自定义配色目录（当前为空，配色使用内置的 Gruvbox 主题）。
 - `backdrops/`、`screenshots/`：备用背景图片和历史截图（背景图当前未启用，配置使用纯色背景）。
 
@@ -15,7 +15,7 @@
 
 本项目没有构建步骤。WezTerm 会直接加载 Lua 文件。
 
-- `wezterm start --config-file wezterm.lua`：使用本配置启动 WezTerm。
+- `wezterm --config-file wezterm.lua start`：使用本配置启动 WezTerm。
 - `stylua .`：按照 `.stylua.toml` 格式化所有 Lua 文件。
 - `selene .`：使用 `selene.toml` 检查 Lua 代码。
 

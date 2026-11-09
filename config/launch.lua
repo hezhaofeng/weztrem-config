@@ -1,7 +1,6 @@
 local wezterm = require("wezterm")
 local platform = require("utils.platform")()
 local powershell7 = "pwsh"
-local git_bash = "D:\\software\\Git\\bin\\bash.exe"
 local path_separator = platform.is_win and "\\" or "/"
 local scripts_dir = wezterm.config_dir .. path_separator .. "scripts"
 local pwsh_wezterm_profile = scripts_dir .. path_separator .. "pwsh-wezterm.ps1"
@@ -53,7 +52,7 @@ if platform.is_win then
     },
     {
       label = " 打开 Git Bash",
-      args = { git_bash, "--login", "-i" },
+      args = powershell_command_args("Start-GitBash"),
     },
   }
 elseif platform.is_mac then
