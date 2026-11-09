@@ -315,19 +315,6 @@ Test-CommandTool -Name "git" -Category "Shell/启动项" -Level Required -Displa
 Test-CommandTool -Name "nu" -Category "Shell/启动项" -Level Optional -DisplayName "Nushell" -InstallHint "winget install Nushell.Nushell"
 Test-PathItem -Path "D:\software\Git\bin\bash.exe" -Category "Shell/启动项" -Name "Git Bash 固定路径" -Level Optional -Note "launch.lua 当前写死了这个路径；迁移到新机器时要么保持路径一致，要么改 launch.lua。"
 
-Test-CommandTool -Name "yazi" -Category "Yazi" -Level Required -DisplayName "Yazi 文件管理器" -InstallHint "winget install sxyazi.yazi"
-Test-CommandTool -Name "ya" -Category "Yazi" -Level Optional -DisplayName "Yazi 插件管理器 ya" -InstallHint "通常随 Yazi 一起安装。"
-Test-CommandTool -Name "file" -Category "Yazi 配套工具" -Level Optional -DisplayName "file" -Note "用于文件类型识别。"
-Test-CommandTool -Name "rg" -Category "Yazi 配套工具" -Level Optional -DisplayName "ripgrep" -InstallHint "winget install BurntSushi.ripgrep.MSVC"
-Test-CommandTool -Name "fd" -Category "Yazi 配套工具" -Level Optional -DisplayName "fd" -InstallHint "winget install sharkdp.fd"
-Test-CommandTool -Name "fzf" -Category "Yazi 配套工具" -Level Optional -DisplayName "fzf" -InstallHint "winget install junegunn.fzf"
-Test-CommandTool -Name "zoxide" -Category "Yazi 配套工具" -Level Optional -DisplayName "zoxide" -InstallHint "winget install ajeetdsouza.zoxide"
-Test-CommandTool -Name "bat" -Category "Yazi 配套工具" -Level Optional -DisplayName "bat" -InstallHint "winget install sharkdp.bat"
-Test-CommandTool -Name "jq" -Category "Yazi 配套工具" -Level Optional -DisplayName "jq" -InstallHint "winget install jqlang.jq"
-Test-CommandTool -Name "ffmpeg" -Category "Yazi 配套工具" -Level Optional -DisplayName "FFmpeg" -InstallHint "winget install Gyan.FFmpeg"
-Test-CommandTool -Name "7z" -Category "Yazi 配套工具" -Level Optional -DisplayName "7-Zip CLI" -InstallHint "winget install 7zip.7zip" -VersionArgs @()
-Test-CommandTool -Name "magick" -Category "Yazi 配套工具" -Level Optional -DisplayName "ImageMagick" -InstallHint "winget install ImageMagick.ImageMagick"
-Test-CommandTool -Name "pdftoppm" -Category "Yazi 配套工具" -Level Optional -DisplayName "Poppler pdftoppm" -Note "用于 PDF 预览；Windows 上常通过 Scoop/Chocolatey 安装 poppler。" -VersionArgs @()
 
 Test-CommandTool -Name "codex" -Category "AI CLI/启动项" -Level Optional -DisplayName "Codex CLI" -InstallHint "pnpm add -g @openai/codex@latest"
 Test-CommandTool -Name "claude" -Category "AI CLI/启动项" -Level Optional -DisplayName "Claude CLI"

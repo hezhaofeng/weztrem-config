@@ -12,7 +12,7 @@
 - 状态栏：右侧显示日期时间和电池状态。
 - 快捷键：禁用默认键盘绑定；保留 WezTerm 默认鼠标绑定，以支持 Codex、Claude 等全屏终端程序。
 - 窗口：启动时自动最大化，规避跨 DPI 显示器切换时窗口自行缩小的上游问题（wezterm/wezterm#4915、#5022）；仅对启动时的首个窗口生效。
-- 启动器：集成 PowerShell、cmd、Nushell、Yazi、Codex、Git worktree、Claude、pnpm 更新和 Git Bash。
+- 启动器：集成 PowerShell、cmd、Nushell、Codex、Git worktree、Claude、pnpm 更新和 Git Bash。
 
 ## 目录结构
 
@@ -37,7 +37,6 @@
 │   ├── git-worktree-tools.ps1 # Git worktree 工作流别名
 │   └── pwsh-wezterm.ps1     # WezTerm 专用 PowerShell 启动脚本
 ├── backdrops/               # 背景图片（当前未启用，保留备用）
-├── img/                     # 文档图片
 └── screenshots/             # 截图
 ```
 
@@ -53,14 +52,6 @@
 - 系统字体：
   - `Microsoft YaHei`
   - `Segoe UI Emoji`
-
-### 推荐项
-
-- Yazi：`yazi`
-- Yazi 插件管理器：`ya`
-- Yazi 配套工具：`rg`、`fd`、`fzf`、`zoxide`、`jq`、`ffmpeg`、`7z`、`magick`、`pdftoppm`
-- 文本预览增强：`bat`
-- 文件类型识别：`file`
 
 ### 启动菜单相关可选项
 
@@ -92,7 +83,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\check-env.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\check-env.ps1 -Json
 ```
 
-这个脚本只做检测，不会安装软件，也不会修改系统。它会检查 WezTerm 配置加载、启动项、Yazi 配套工具、AI CLI、字体和背景图片是否就绪。
+这个脚本只做检测，不会安装软件，也不会修改系统。它会检查 WezTerm 配置加载、启动项、AI CLI、字体和背景图片是否就绪。
 
 ## 启动项
 
@@ -110,7 +101,6 @@ pwsh -NoLogo -NoProfile -NoExit -File scripts\pwsh-wezterm.ps1
 | 打开 PowerShell 7 | 默认推荐 Shell |
 | 打开命令提示符 | 使用 UTF-8 代码页启动 cmd |
 | 打开 Nushell | 可选 Shell，未安装时显示提示 |
-| 打开 Yazi 文件管理器 | 启动 `yazi` |
 | cxy：以 YOLO 模式启动 Codex | 调用 `codex --yolo` |
 | gwn：创建 Git worktree 并进入目录 | 按任务分支创建 worktree，然后进入新目录 |
 | ccd：启动 Claude 并跳过权限确认 | 调用 `claude --dangerously-skip-permissions` |
@@ -200,7 +190,6 @@ Git worktree 快捷指令的完整用法和工作原理见 [git-worktree-快捷�
 | `Alt+Ctrl+\` | 水平分屏 |
 | `Alt+Ctrl+h/j/k/l` | 切换窗格 |
 | `Alt+Ctrl+p` | 窗格选择模式（按数字跳转） |
-| `Alt+y` | 输入并执行 `yazi` |
 | `Ctrl+Shift+R` | 重命名当前标签页 |
 | `Ctrl+Shift+Space` 后按 `p` | 进入窗格调整模式 |
 | `Ctrl+Shift+Space` 后按 `f` | 进入字体调整模式 |

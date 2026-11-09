@@ -1,7 +1,6 @@
 local wezterm = require("wezterm")
 local platform = require("utils.platform")()
 local act = wezterm.action
-local yazi = "yazi\r"
 
 local mod = {}
 
@@ -81,7 +80,6 @@ local keys = {
   -- window --
   -- spawn windows
   { key = "n", mods = mod.SUPER, action = act.SpawnWindow },
-  { key = "y", mods = mod.SUPER, action = act.SendString(yazi) },
 
   -- panes --
   -- panes: split panes

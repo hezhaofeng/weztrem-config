@@ -46,7 +46,6 @@ M.process_icons = {
   python = "󰌠",
   ssh = "󰣀",
   vim = "",
-  yazi = "󰉋",
   zsh = "",
 }
 

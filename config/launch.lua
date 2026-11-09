@@ -1,6 +1,5 @@
 local wezterm = require("wezterm")
 local platform = require("utils.platform")()
-local yazi = "yazi"
 local powershell7 = "pwsh"
 local git_bash = "D:\\software\\Git\\bin\\bash.exe"
 local path_separator = platform.is_win and "\\" or "/"
@@ -41,10 +40,6 @@ if platform.is_win then
       label = " 打开 Nushell",
       args = powershell_command_args("Start-OptionalCommand -CommandName 'nu' -DisplayName 'Nushell'"),
     },
-    {
-      label = " 打开 Yazi 文件管理器",
-      args = powershell_command_args("Start-OptionalCommand -CommandName 'yazi' -DisplayName 'Yazi'"),
-    },
     { label = "󰚰 cxy：以 YOLO 模式启动 Codex", args = powershell_command_args("cxy") },
     { label = " gwn：创建 Git worktree 并进入目录", args = powershell_command_args("gwn") },
     { label = "󰚰 ccd：启动 Claude 并跳过权限确认", args = powershell_command_args("ccd") },
@@ -68,7 +63,6 @@ elseif platform.is_mac then
     { label = " 打开 Fish", args = { "fish", "--login" } },
     { label = " 打开 Nushell", args = { "nu" } },
     { label = " 打开 Zsh", args = { "zsh", "--login" } },
-    { label = " 打开 Yazi 文件管理器", args = { yazi } },
   }
 elseif platform.is_linux then
   options.default_prog = { "bash", "--login" }
@@ -77,7 +71,6 @@ elseif platform.is_linux then
     { label = " 打开 Fish", args = { "fish", "--login" } },
     { label = " 打开 Nushell", args = { "nu" } },
     { label = " 打开 Zsh", args = { "zsh", "--login" } },
-    { label = " 打开 Yazi 文件管理器", args = { yazi } },
   }
 end
 

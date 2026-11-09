@@ -9,7 +9,7 @@
 - `utils/`：共享辅助函数，目前包含平台判断和数学工具。
 - `scripts/`：PowerShell 启动与辅助脚本，加载链为 `pwsh-wezterm.ps1 -> cli-tools.ps1 -> git-worktree-tools.ps1`；`check-env.ps1` 是独立的环境检测脚本。
 - `colors/`：预留的自定义配色目录（当前为空，配色使用内置的 Gruvbox 主题）。
-- `backdrops/`、`img/`、`screenshots/`：图片资源和文档截图（背景图当前未启用，配置使用纯色背景）。
+- `backdrops/`、`screenshots/`：备用背景图片和历史截图（背景图当前未启用，配置使用纯色背景）。
 
 ## 构建、测试与开发命令
 
