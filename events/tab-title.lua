@@ -77,7 +77,7 @@ end
 
 M.check_if_admin = function(p)
   p = p or ""
-  if p:match("^Administrator: ") then
+  if p:match("^Administrator:%s*") or p:match("^管理员:%s*") or p:match("^管理员：%s*") then
     return true
   end
   return false
