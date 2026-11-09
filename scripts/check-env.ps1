@@ -7,6 +7,7 @@ $ErrorActionPreference = "Continue"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $Results = [System.Collections.Generic.List[object]]::new()
+. (Join-Path $PSScriptRoot "cli-tools.ps1")
 
 function Add-CheckResult {
     param(
@@ -61,7 +62,7 @@ function Invoke-ExternalVersion {
     )
 
     if ($Arguments.Count -eq 0) {
-        return ""
+        return [pscustomobject]@{ Version = ""; Error = "" }
     }
 
     $fileName = $Source
@@ -88,19 +89,30 @@ function Invoke-ExternalVersion {
 
     try {
         [void] $process.Start()
+        # 同时读取两条输出流，避免等待进程时管道写满导致误判超时。
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
         if (-not $process.WaitForExit($TimeoutMilliseconds)) {
             $process.Kill()
-            return ""
+            return [pscustomobject]@{ Version = ""; Error = "版本检测超时（${TimeoutMilliseconds}ms）。" }
         }
 
-        $output = $process.StandardOutput.ReadToEnd()
-        if (-not $output) {
-            $output = $process.StandardError.ReadToEnd()
+        $stdout = $stdoutTask.GetAwaiter().GetResult()
+        $stderr = $stderrTask.GetAwaiter().GetResult()
+        if ($process.ExitCode -ne 0) {
+            $detail = ((@($stderr, $stdout) -join "`n") -split "`r?`n" |
+                Where-Object { $_.Trim() } | Select-Object -First 1)
+            return [pscustomobject]@{ Version = ""; Error = "版本检测失败，退出码：$($process.ExitCode)。$detail" }
         }
 
-        return (($output -split "`r?`n") | Where-Object { $_.Trim() } | Select-Object -First 1).Trim()
+        $version = ((@($stdout, $stderr) -join "`n") -split "`r?`n" |
+            Where-Object { $_.Trim() } | Select-Object -First 1)
+        if (-not $version) {
+            return [pscustomobject]@{ Version = ""; Error = "版本命令未返回版本信息。" }
+        }
+        return [pscustomobject]@{ Version = $version.Trim(); Error = "" }
     } catch {
-        return ""
+        return [pscustomobject]@{ Version = ""; Error = "无法执行版本检测：$($_.Exception.Message)" }
     } finally {
         if ($process) {
             $process.Dispose()
@@ -116,16 +128,24 @@ function Get-CommandVersion {
         [string[]] $VersionArgs = @("--version")
     )
 
-    $command = Get-Command $CommandName -CommandType Application,ExternalScript,Cmdlet -ErrorAction SilentlyContinue |
-        Select-Object -First 1
+    # 与实际启动命令保持一致，优先使用应用程序启动器。
+    $command = $null
+    foreach ($commandType in @("Application", "ExternalScript", "Cmdlet")) {
+        $command = Get-Command $CommandName -CommandType $commandType -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+        if ($command) { break }
+    }
 
     if (-not $command) {
         return $null
     }
 
     $version = ""
+    $versionError = ""
     if ($command.CommandType -in @("Application", "ExternalScript")) {
-        $version = Invoke-ExternalVersion -Source $command.Source -Arguments $VersionArgs
+        $versionResult = Invoke-ExternalVersion -Source $command.Source -Arguments $VersionArgs
+        $version = $versionResult.Version
+        $versionError = $versionResult.Error
     } elseif ($command.Version) {
         $version = $command.Version.ToString()
     }
@@ -133,6 +153,7 @@ function Get-CommandVersion {
     [pscustomobject]@{
         Name = $CommandName
         Version = $version
+        Error = $versionError
         Source = if ($command.Source) { $command.Source } else { $command.Name }
     }
 }
@@ -156,7 +177,9 @@ function Test-CommandTool {
 
     $command = Get-CommandVersion -CommandName $Name -VersionArgs $VersionArgs
     if ($command) {
-        Add-CheckResult -Status "OK" -Category $Category -Name $DisplayName -Version $command.Version -Path $command.Source -Note $Note -InstallHint $InstallHint
+        $status = if ($command.Error) { "WARN" } else { "OK" }
+        $checkNote = (@($Note, $command.Error) | Where-Object { $_ }) -join " "
+        Add-CheckResult -Status $status -Category $Category -Name $DisplayName -Version $command.Version -Path $command.Source -Note $checkNote -InstallHint $InstallHint
         return
     }
 
@@ -250,13 +273,14 @@ function Invoke-WezTermConfigCheck {
 
     $configFile = Join-Path $RepoRoot "wezterm.lua"
     try {
-        $output = & $wezterm.Source --config-file $configFile show-keys 2>&1 | Select-Object -First 3
+        # 完整消费输出后再取摘要，避免提前关闭管道而丢失真实退出码。
+        $output = @(& $wezterm.Source --config-file $configFile show-keys 2>&1)
         $exitCode = $LASTEXITCODE
-        $note = (($output | Out-String).Trim())
-        if ($exitCode -eq 0 -or $note -match "Default key table") {
-            Add-CheckResult -Status "OK" -Category "WezTerm" -Name "配置加载检查" -Path $configFile -Note (($output | Out-String).Trim())
+        $note = (($output | Select-Object -First 3 | Out-String).Trim())
+        if ($exitCode -eq 0) {
+            Add-CheckResult -Status "OK" -Category "WezTerm" -Name "配置加载检查" -Path $configFile -Note $note
         } else {
-            Add-CheckResult -Status "MISS" -Category "WezTerm" -Name "配置加载检查" -Path $configFile -Note (($output | Out-String).Trim())
+            Add-CheckResult -Status "MISS" -Category "WezTerm" -Name "配置加载检查" -Path $configFile -Note "退出码：$exitCode。$note"
         }
     } catch {
         Add-CheckResult -Status "MISS" -Category "WezTerm" -Name "配置加载检查" -Path $configFile -Note $_.Exception.Message
@@ -305,6 +329,7 @@ Invoke-WezTermConfigCheck
 Test-PathItem -Path (Join-Path $RepoRoot "wezterm.lua") -Category "WezTerm" -Name "入口配置 wezterm.lua" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\pwsh-wezterm.ps1") -Category "WezTerm" -Name "PowerShell 启动脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\cli-tools.ps1") -Category "WezTerm" -Name "CLI 别名脚本" -Level Required
+Test-PathItem -Path (Join-Path $RepoRoot "scripts\environment-tools.ps1") -Category "WezTerm" -Name "环境刷新脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "scripts\git-worktree-tools.ps1") -Category "WezTerm" -Name "Git worktree 辅助脚本" -Level Required
 Test-PathItem -Path (Join-Path $RepoRoot "backdrops\space.png") -Category "WezTerm" -Name "背景图片 space.png" -Level Optional -Note "配置当前使用纯色背景，该图片未启用，保留备用。"
 
@@ -313,11 +338,16 @@ Test-CommandTool -Name "powershell" -Category "Shell/启动项" -Level Required 
 Test-CommandTool -Name "cmd" -Category "Shell/启动项" -Level Required -DisplayName "命令提示符" -VersionArgs @("/c", "ver")
 Test-CommandTool -Name "git" -Category "Shell/启动项" -Level Required -DisplayName "Git CLI" -InstallHint "winget install Git.Git"
 Test-CommandTool -Name "nu" -Category "Shell/启动项" -Level Optional -DisplayName "Nushell" -InstallHint "winget install Nushell.Nushell"
-Test-PathItem -Path "D:\software\Git\bin\bash.exe" -Category "Shell/启动项" -Name "Git Bash 固定路径" -Level Optional -Note "launch.lua 当前写死了这个路径；迁移到新机器时要么保持路径一致，要么改 launch.lua。"
-
+$gitBash = Resolve-GitBashPath
+if ($gitBash) {
+    Test-PathItem -Path $gitBash -Category "Shell/启动项" -Name "Git Bash" -Level Optional
+} else {
+    Add-CheckResult -Status "WARN" -Category "Shell/启动项" -Name "Git Bash" -Note "固定路径和 PATH 中的 Git 安装目录均未找到 bash.exe。"
+}
 
 Test-CommandTool -Name "codex" -Category "AI CLI/启动项" -Level Optional -DisplayName "Codex CLI" -InstallHint "pnpm add -g @openai/codex@latest"
 Test-CommandTool -Name "claude" -Category "AI CLI/启动项" -Level Optional -DisplayName "Claude CLI"
+Test-CommandTool -Name "agy" -Category "AI CLI/启动项" -Level Optional -DisplayName "Antigravity CLI"
 Test-CommandTool -Name "pnpm" -Category "AI CLI/启动项" -Level Optional -DisplayName "pnpm" -InstallHint "corepack enable 或 winget install pnpm.pnpm"
 
 Test-CommandTool -Name "stylua" -Category "开发工具" -Level Optional -DisplayName "StyLua 格式化" -Note "AGENTS.md 约定改动 Lua 后执行 stylua ." -InstallHint "winget install JohnnyMorganz.StyLua"
